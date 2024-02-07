@@ -11,11 +11,11 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import requests
 translator = Translator()
-bot = telebot.TeleBot("secret1")
+bot = telebot.TeleBot("6675782241:AAGmcs9g2euKj89gmJJXl26LHspCWgV8xyQ")
 scope = []
-spreadsheet_id = 'secret2'
-languages = ["en", "ru", "es", "zh"]
-language_dict = {"🇺🇲":"en", "🇷🇺":"ru"}
+spreadsheet_id = '1dFri1p0oVAar9LEZx8I-9CCtcorHD7nkHKpqTDAfyXo'
+#languages = ["en", "ru", "es", "zh"]
+#language_dict = {"🇺🇲":"en", "🇷🇺":"ru"}
 
 response = requests.get('https://www.googleapis.com/auth/spreadsheets', timeout=10) 
 scope.append(response.url)
@@ -54,17 +54,17 @@ def main():
             date_list.append(today.strftime("%Y-%m-%d"))
             date_list.append(three_days_ago.strftime("%Y-%m-%d"))
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            russian = types.KeyboardButton("🇷🇺")
-            enlish = types.KeyboardButton("🇺🇲")
-            markup.row(russian, enlish)
-            bot.send_message(message.chat.id, 'Please select your language', reply_markup=markup)
+            option1 = types.KeyboardButton('I am a shopper 🛍️')
+            option2 = types.KeyboardButton('I am a flight attendant 👩‍✈️')
+            markup.row(option1, option2)
+            bot.send_message(message.chat.id, 'Hello there ! Please select one of the options below',reply_markup=markup)
             a_list.clear()
             print(date_list)
             return link
 
 
 
-
+        '''
 
         @bot.message_handler(func=lambda message: message.text == "🇷🇺")
         def lang(message):
@@ -76,7 +76,7 @@ def main():
             bot.send_message(message.chat.id, translator.translate(text = 'Please choose what best describes you', src ="en", dest = a_list[0]).text, reply_markup=markup)
             return a_list
     
-        @bot.message_handler(func=lambda message: message.text == "🇺🇲")
+        @bot.message_handler(func=lambda message: message.text == "/start")
         def lang(message):
             a_list.append(language_dict["🇺🇲"])
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -85,6 +85,7 @@ def main():
             markup.row(yes_button, no_button)
             bot.send_message(message.chat.id, translator.translate(text = 'Please choose what best describes you', src ="en", dest = a_list[0]).text, reply_markup=markup)
             return a_list
+            '''
         
         
         
@@ -93,27 +94,26 @@ def main():
         
         
         
-        
-        @bot.message_handler(func=lambda message: message.text == translator.translate(text = 'I am a shopper 🛍️', src ="en", dest = a_list[0]).text)
+        @bot.message_handler(func=lambda message: message.text == 'I am a shopper 🛍️')
         def shopper(message):
             a_list.append('I am a shopper 🛍️')
             #a_list.append(message.text)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            yes_button = types.KeyboardButton(translator.translate(text = 'ready 👍', src ="en", dest = a_list[0]).text)
-            no_button = types.KeyboardButton(translator.translate(text = 'not ready 👎', src ="en", dest = a_list[0]).text)
+            yes_button = types.KeyboardButton('ready 👍')
+            no_button = types.KeyboardButton('not ready 👎')
             markup.row(yes_button, no_button)
-            bot.send_message(message.chat.id, translator.translate(text = 'Hello Shopper !!! We will start by asking you a few questions, ready ?', src ="en", dest = a_list[0]).text, reply_markup=markup)
+            bot.send_message(message.chat.id, 'Hello Shopper !!! We will start by asking you a few questions, ready ?',reply_markup=markup)
             return a_list
         
-        @bot.message_handler(func=lambda message: message.text == translator.translate(text = 'I am a flight attendant 👩‍✈️', src ="en", dest = a_list[0]).text)
+        @bot.message_handler(func=lambda message: message.text == 'I am a flight attendant 👩‍✈️')
         def flightattendant(message):
             a_list.append('I am a flight attendant 👩‍✈️')
             #a_list.append(message.text)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            yes_button = types.KeyboardButton(translator.translate(text = 'ready 👍', src ="en", dest = a_list[0]).text)
-            no_button = types.KeyboardButton(translator.translate(text = 'not ready 👎', src ="en", dest = a_list[0]).text)
+            yes_button = types.KeyboardButton('ready 👍')
+            no_button = types.KeyboardButton('not ready 👎')
             markup.row(yes_button, no_button)
-            bot.send_message(message.chat.id, translator.translate(text = 'Hello flight attendant !!! We will start by asking you a few questions, ready ? ', src ="en", dest = a_list[0]).text, reply_markup=markup)
+            bot.send_message(message.chat.id, 'Hello flight attendant !!! We will start by asking you a few questions, ready ? ',reply_markup=markup)
             print(a_list)
             return a_list
         
@@ -125,10 +125,10 @@ def main():
         
         
         
-        @bot.message_handler(func=lambda message: message.text == translator.translate(text = 'ready 👍', src ="en", dest = a_list[0]).text and a_list[1]=='I am a shopper 🛍️')
+        @bot.message_handler(func=lambda message: message.text == 'ready 👍' and a_list[0]=='I am a shopper 🛍️')
         def ready(message):
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            submit = types.KeyboardButton(translator.translate(text = 'submit', src ="en", dest = a_list[0]).text)
+            submit = types.KeyboardButton('submit')
             markup.row(submit)
             for row in range(2,20):
                 if sheets.values().get(spreadsheetId=spreadsheet_id, range=f"Sheet1!B{row}").execute().get('values')!=None:
@@ -136,7 +136,7 @@ def main():
                 else:
                                         
                     
-                    sheets.values().update(spreadsheetId=spreadsheet_id, range = f"Sheet1!B{row}", valueInputOption="USER_ENTERED", body={"values":[[f'{a_list[1]}']]}).execute()
+                    sheets.values().update(spreadsheetId=spreadsheet_id, range = f"Sheet1!B{row}", valueInputOption="USER_ENTERED", body={"values":[[f'{a_list[0]}']]}).execute()
                     sheets.values().update(spreadsheetId=spreadsheet_id, range = f"Sheet1!C{row}", valueInputOption="USER_ENTERED", body={"values":[[f'{link[0]}']]}).execute()
                     sheets.values().update(spreadsheetId=spreadsheet_id, range = f"Sheet1!E{row}", valueInputOption="USER_ENTERED", body={"values":[[f'{date_list[0]}']]}).execute()
                     #time.sleep(5)
@@ -147,20 +147,20 @@ def main():
             #yes_button = types.KeyboardButton('YES ✅')
             #no_button = types.KeyboardButton('NO ❌')
             #markup.row(yes_button, no_button)
-            bot.send_message(message.chat.id, translator.translate(text = 'Please provide the following information about you: \n\n 1. Your Name 👋\n\n 2. Your Location (Country and City) 📍\n\n 3. Total Value of the Item 💲\n\n 4. Link to the item 🔗\n\n 5. Delivery quota 💰', src ="en", dest = a_list[0]).text, reply_markup=markup)
+            bot.send_message(message.chat.id,'Please provide the following information about you: \n\n 1. Your Name 👋\n\n 2. Your Location (Country and City) 📍\n\n 3. Total Value of the Item 💲\n\n 4. Link to the item 🔗\n\n 5. Delivery quota 💰',reply_markup=markup)
        
             return a_list
         
-        @bot.message_handler(func=lambda message: message.text == translator.translate(text = 'ready 👍', src ="en", dest = a_list[0]).text and a_list[1]== 'I am a flight attendant 👩‍✈️')
+        @bot.message_handler(func=lambda message: message.text == 'ready 👍' and a_list[0]== 'I am a flight attendant 👩‍✈️')
         def ready(message):
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            submit = types.KeyboardButton(translator.translate(text = 'submit', src ="en", dest = a_list[0]).text)
+            submit = types.KeyboardButton('submit')
             markup.row(submit)
             for row in range(2,20):
                 if sheets.values().get(spreadsheetId=spreadsheet_id, range=f"Sheet1!B{row}").execute().get('values')!=None:
                     row = row+1
                 else:
-                    sheets.values().update(spreadsheetId=spreadsheet_id, range = f"Sheet1!B{row}", valueInputOption="USER_ENTERED", body={"values":[[f'{a_list[1]}']]}).execute()
+                    sheets.values().update(spreadsheetId=spreadsheet_id, range = f"Sheet1!B{row}", valueInputOption="USER_ENTERED", body={"values":[[f'{a_list[0]}']]}).execute()
                     sheets.values().update(spreadsheetId=spreadsheet_id, range = f"Sheet1!C{row}", valueInputOption="USER_ENTERED", body={"values":[[f'{link[0]}']]}).execute()
                     sheets.values().update(spreadsheetId=spreadsheet_id, range = f"Sheet1!E{row}", valueInputOption="USER_ENTERED", body={"values":[[f'{date_list[0]}']]}).execute()
                     #time.sleep(5)
@@ -171,7 +171,7 @@ def main():
             #yes_button = types.KeyboardButton('YES ✅')
             #no_button = types.KeyboardButton('NO ❌')
             #markup.row(yes_button, no_button)
-            bot.send_message(message.chat.id, translator.translate(text = 'Please provide the following information about you: \n\n 1. Your Name 👋\n\n 2. Where are You Flying from and To \n\n (example:🇪🇸 > 🇷🇺 ) \n\n 3. Preferred quota for your service. 💰', src ="en", dest = a_list[0]).text, reply_markup=markup)
+            bot.send_message(message.chat.id, 'Please provide the following information about you: \n\n 1. Your Name 👋\n\n 2. Where are You Flying from and To \n\n (example:🇪🇸 > 🇷🇺 ) \n\n 3. Preferred quota for your service. 💰', reply_markup=markup)
        
             return a_list
         
@@ -182,33 +182,33 @@ def main():
         
         
         
-        @bot.message_handler(func=lambda message: message.text == translator.translate(text = "not ready 👎", src ="en", dest = a_list[0]).text)
+        @bot.message_handler(func=lambda message: message.text ==  "not ready 👎")
         def notready(message):
             a_list.clear()
             print("list has been cleared", a_list)
-            bot.send_message(message.chat.id, translator.translate(text = "Nevermind, let's start again", src ="en", dest = a_list[0]).text)
+            bot.send_message(message.chat.id,"Nevermind, let's start again")
     
              
-        @bot.message_handler(func=lambda message: message.text == translator.translate(text = "YES ✅", src ="en", dest = a_list[0]).text)
+        @bot.message_handler(func=lambda message: message.text == "YES ✅")
         def yes(message):
             
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            yes_button = types.KeyboardButton(translator.translate(text = 'Find Deals 😎', src ="en", dest = a_list[0]).text)
-            no_button = types.KeyboardButton(translator.translate(text = 'Come Back ⬅️', src ="en", dest = a_list[0]).text)
+            yes_button = types.KeyboardButton('Find Deals 😎')
+            no_button = types.KeyboardButton('Come Back ⬅️')
             markup.row(yes_button, no_button)
-            bot.send_message(message.chat.id, translator.translate(text = "your entry has been recorded ✅", src ="en", dest = a_list[0]).text, reply_markup=markup)
+            bot.send_message(message.chat.id,"your entry has been recorded ✅", reply_markup=markup)
             
             print(a_list)
             for row in range(2,20):
                 if sheets.values().get(spreadsheetId=spreadsheet_id, range=f"Sheet1!A{row}").execute().get('values')!=None:
                     row = row+1
                 else:
-                    sheets.values().update(spreadsheetId=spreadsheet_id, range = f"Sheet1!A{row}", valueInputOption="USER_ENTERED", body={"values":[[f'{a_list[2]} \n\n Start chat: {link[0]}']]}).execute()
+                    sheets.values().update(spreadsheetId=spreadsheet_id, range = f"Sheet1!A{row}", valueInputOption="USER_ENTERED", body={"values":[[f'{a_list[1]} \n\n Start chat: {link[0]}']]}).execute()
                     #photo=bot.download_file(bot.get_file(message.photo[-1].file_id).file_path)
                     #sheets.insert_row([message.chat.id, message.date, photo], 2)
                     print("recorded ✅")
                     break
-        @bot.message_handler(func=lambda message: message.text == translator.translate(text = "Come Back ⬅️", src ="en", dest = a_list[0]).text)
+        @bot.message_handler(func=lambda message: message.text == "Come Back ⬅️")
         def comeback(message):
             start(message)
         
@@ -231,19 +231,19 @@ def main():
                 
         '''
         
-        @bot.message_handler(func=lambda message: message.text == translator.translate(text = "Find Deals 😎", src ="en", dest = a_list[0]).text)
+        @bot.message_handler(func=lambda message: message.text == "Find Deals 😎")
         def FindDeals(message):
             for row in range(2,20):
 
-                if sheets.values().get(spreadsheetId=spreadsheet_id, range=f"Sheet1!A{row}").execute().get('values')!=None and sheets.values().get(spreadsheetId=spreadsheet_id, range=f"Sheet1!B{row}").execute().get('values')[0][0]!=a_list[1]:
+                if sheets.values().get(spreadsheetId=spreadsheet_id, range=f"Sheet1!A{row}").execute().get('values')!=None and sheets.values().get(spreadsheetId=spreadsheet_id, range=f"Sheet1!B{row}").execute().get('values')[0][0]!=a_list[0]:
                     
                     bot.send_message(message.chat.id, str(sheets.values().get(spreadsheetId=spreadsheet_id, range=f"Sheet1!A{row}").execute().get('values')[0][0]))
      
-        @bot.message_handler(func=lambda message: message.text == translator.translate(text = "NO ❌", src ="en", dest = a_list[0]).text)
+        @bot.message_handler(func=lambda message: message.text == "NO ❌")
         def no(message):
             a_list.clear()
             print("list has been cleared", a_list)
-            bot.send_message(message.chat.id, translator.translate(text = "Nevermind, let's start again. Click /start command to relaunch the bot.", src ="en", dest = a_list[0]).text)
+            bot.send_message(message.chat.id, "Nevermind, let's start again. Click /start command to relaunch the bot.")
     
     
     
@@ -253,16 +253,16 @@ def main():
         def record_messages(message):
             
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            yes_button = types.KeyboardButton(translator.translate(text = 'YES ✅', src ="en", dest = a_list[0]).text)
-            no_button = types.KeyboardButton(translator.translate(text = 'NO ❌', src ="en", dest = a_list[0]).text)
+            yes_button = types.KeyboardButton('YES ✅')
+            no_button = types.KeyboardButton('NO ❌')
             markup.row(yes_button, no_button)
             if len(a_list)<1:
-                bot.send_message(message.chat.id, translator.translate(text = "please start the bot with the start command", src ="en", dest = a_list[0]).text)
+                bot.send_message(message.chat.id, "please start the bot with the start command")
                 
             else:
                 a_list.append(message.text)
                 print("waiting for confirmation...")
-                bot.send_message(message.chat.id, translator.translate(text = f"Does this info look correct to you: \n\n {a_list[2]} ?", src ="en", dest = a_list[0]).text, reply_markup=markup)
+                bot.send_message(message.chat.id, f"Does this info look correct to you: \n\n {a_list[1]} ?", reply_markup=markup)
                 
 
         bot.polling()
