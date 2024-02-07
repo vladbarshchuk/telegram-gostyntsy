@@ -1,3 +1,4 @@
+import dependencies
 import telebot
 from telebot import types
 import os
@@ -11,9 +12,9 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import requests
 translator = Translator()
-bot = telebot.TeleBot("6675782241:AAGmcs9g2euKj89gmJJXl26LHspCWgV8xyQ")
+bot = telebot.TeleBot(dependencies.line1)
 scope = []
-spreadsheet_id = '1dFri1p0oVAar9LEZx8I-9CCtcorHD7nkHKpqTDAfyXo'
+spreadsheet_id = dependencies.line2
 #languages = ["en", "ru", "es", "zh"]
 #language_dict = {"🇺🇲":"en", "🇷🇺":"ru"}
 
